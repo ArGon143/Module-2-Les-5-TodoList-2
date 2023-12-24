@@ -3,7 +3,6 @@ import styles from './TodosPage.module.css';
 import todosImg from './todos100x100.png';
 import TodoList from '../TodoList/TodoList';
 import CreatingTodo from '../CreatingTodo/CreatingTodo';
-import SortTodos from '../SortTodos/SortTodos';
 
 const TodoPage = () => {
 	const [todos, setTodos] = useState([]);
@@ -14,9 +13,8 @@ const TodoPage = () => {
 	const [isUpdatingTodo, setIsUpdatingTodo] = useState(false);
 	const [isDeletingTodo, setIsDeletingTodo] = useState(false);
 
-	const [isSortTodos, setIsSortTodos] = useState(false);
-
 	const [searchTerm, setSearchTerm] = useState('');
+	const [checkedSortCheckbox, setCheckedSortCheckbox] = useState(false);
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -28,7 +26,7 @@ const TodoPage = () => {
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [refreshTodosList, isUpdatingTodo]);
+	}, [refreshTodosList, isUpdatingTodo, checkedSortCheckbox]);
 
 	const editTodo = (id, isEditTodo) => {
 		setIsUpdatingTodo(true);
@@ -44,20 +42,6 @@ const TodoPage = () => {
 				setRefreshTodosList(!refreshTodosList);
 			})
 			.finally(() => setIsUpdatingTodo(false));
-	};
-
-	const sortTodos = () => {
-		if (isSortTodos === false) {
-			setTodos(todos.slice().sort((a, b) => a.title.localeCompare(b.title)));
-			setIsSortTodos(true);
-		} else {
-			fetch('http://localhost:3005/todos')
-				.then((loadedData) => loadedData.json())
-				.then((loadedTodos) => {
-					setTodos(loadedTodos);
-				});
-			setIsSortTodos(false);
-		}
 	};
 
 	const creatingNewTodo = (inputValue) => {
@@ -107,11 +91,6 @@ const TodoPage = () => {
 					creatingNewTodo={creatingNewTodo}
 					isCreatingTodo={isCreatingTodo}
 				/>
-				{todos.length !== 0 && todos.length > 1 ? (
-					<SortTodos sortTodos={sortTodos} />
-				) : (
-					<></>
-				)}
 			</section>
 
 			{isLoading ? (
@@ -124,6 +103,8 @@ const TodoPage = () => {
 					isDeletingTodo={isDeletingTodo}
 					searchTerm={searchTerm}
 					setSearchTerm={setSearchTerm}
+					checkedSortCheckbox={checkedSortCheckbox}
+					setCheckedSortCheckbox={setCheckedSortCheckbox}
 				/>
 			)}
 		</main>
