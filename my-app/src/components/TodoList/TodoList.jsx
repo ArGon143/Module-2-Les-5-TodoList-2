@@ -24,7 +24,7 @@ const TodoList = ({
 
 	useEffect(() => {
 		let results = data.filter((item) =>
-			item.title.toLowerCase().includes(searchTerm),
+			item.title.toLowerCase().includes(searchTerm.toLowerCase()),
 		);
 		setSearchResults(results);
 	}, [searchTerm, data]);
@@ -33,9 +33,9 @@ const TodoList = ({
 		let sortTodosList;
 
 		if (checkedSortCheckbox === false) {
-			sortTodosList = data.sort((a, b) => null);
+			sortTodosList = data.slice().sort((a, b) => null);
 		} else if (checkedSortCheckbox === true) {
-			sortTodosList = data.sort((a, b) => a.title.localeCompare(b.title));
+			sortTodosList = data.slice().sort((a, b) => a.title.localeCompare(b.title));
 		}
 		setSortTodosState(sortTodosList);
 	}, [checkedSortCheckbox, data]);
@@ -44,9 +44,9 @@ const TodoList = ({
 
 	if (searchTerm) {
 		if (checkedSortCheckbox) {
-			let sortSearchResults = searchResults.sort((a, b) =>
-				a.title.localeCompare(b.title),
-			);
+			let sortSearchResults = searchResults
+				.slice()
+				.sort((a, b) => a.title.localeCompare(b.title));
 			todoList = sortSearchResults;
 		} else todoList = searchResults;
 	} else if (checkedSortCheckbox) {
